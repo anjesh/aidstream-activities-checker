@@ -1,3 +1,4 @@
+import re
 
 class IatiCSVRowConstants:
     ACTIVITY_ID = 0
@@ -11,30 +12,32 @@ class IatiCSVRowConstants:
     REPORTING_ORG_TYPE = 8
     IATI_IDENTIFIER = 9
     TITLE = 10
-    DESCRIPTION = 11
-    ACTIVITY_STATUS = 12
-    START_PLANNED = 13
-    START_ACTUAL = 14
-    END_PLANNED = 15
-    END_ACTUAL = 16
-    TOTAL_COMMITMENTS = 17
-    TOTAL_DISBURSEMENTS = 18
-    TOTAL_EXPENDITURE = 19
-    TOTAL_INCOMING_FUNDS = 20
-    FUNDING_ORGANISATIONS = 21
-    EXTENDING_ORGANISATIONS = 22
-    ACCOUNTABLE_ORGANISATIONS = 23
-    IMPLEMENTING_ORGANISATIONS = 24
-    RECIPIENT_COUNTRY = 25
-    RECIPIENT_COUNTRY_CODES = 26
-    RECIPIENT_COUNTRY_PERCENTAGES = 27
-    RECIPIENT_REGION = 28
-    RECIPIENT_REGION_CODES = 29
-    RECIPIENT_REGION_PERCENTAGES = 30
-    SECTOR_TEXT = 31
-    SECTOR_VOCABULARIES = 32
-    SECTOR_CODES = 33
-    SECTOR_PERCENTAGES = 34
+    ACTIVITY_STATE = 11
+    DESCRIPTION = 12
+    DESCRIPTION_TYPE = 13
+    ACTIVITY_STATUS = 14
+    START_PLANNED = 15
+    START_ACTUAL = 16
+    END_PLANNED = 17
+    END_ACTUAL = 18
+    TOTAL_COMMITMENTS = 19
+    TOTAL_DISBURSEMENTS = 20
+    TOTAL_EXPENDITURE = 21
+    TOTAL_INCOMING_FUNDS = 22
+    FUNDING_ORGANISATIONS = 23
+    EXTENDING_ORGANISATIONS = 24
+    ACCOUNTABLE_ORGANISATIONS = 25
+    IMPLEMENTING_ORGANISATIONS = 26
+    RECIPIENT_COUNTRY = 27
+    RECIPIENT_COUNTRY_CODES = 28
+    RECIPIENT_COUNTRY_PERCENTAGES = 29
+    RECIPIENT_REGION = 30
+    RECIPIENT_REGION_CODES = 31
+    RECIPIENT_REGION_PERCENTAGES = 32
+    SECTOR_TEXT = 33
+    SECTOR_VOCABULARIES = 34
+    SECTOR_CODES = 35
+    SECTOR_PERCENTAGES = 36
 
 class ErrorLogs:
     def __init__(self):
@@ -76,6 +79,19 @@ class IatiActivityRow:
 
     def checkDescription(self):
         description = self.row[IatiCSVRowConstants.DESCRIPTION]
+        descriptionType = self.row[IatiCSVRowConstants.DESCRIPTION_TYPE]
+        descriptionTypesArray = descriptionType.split(";")
+        typeCodes = []
+        for dtype in descriptionTypesArray:
+            m = re.findall('\[([0-9]*)\].*', dtype)
+            if m and m[0]:
+                if m[0] in typeCodes:
+                    self.errors.add("Descriptions with same type exist")
+                    return False
+                    break
+                else:
+                    typeCodes.append(m[0])
+        # [1]General;[2]Objectives;[3]Target Groups
         if len(description.strip()):
             return True
         self.errors.add("Description missing")

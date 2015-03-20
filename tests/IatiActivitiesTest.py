@@ -5,7 +5,7 @@ from IatiActivities import *
 
 class IatiActivities1Test(unittest.TestCase):
     def setUp(self):
-        self.rowData = ['1706', 'Rahnuma-Family Planning Association of Pakistan', 'mis@fpapak.org', 'en', 'PKR', '1/28/15 15:49', 'Rahnuma-Family Planning Assocation of Pakistan', 'PK-MSW-633-1965', '22', 'PK-MSW-633-1965-GPAF-IMP-059', 'Integrating Education Health and Income generation services for 14,000 school students, their mothers and families, in Pakistan.', 'This is a synergistic project, connecting three ongoing initiatives related to Sexual and Reproductive Health education, services and improving livelihoods. Using the platform of schools, the project will reach out to adolescents, their mothers and families in ten districts of Pakistan, to increase knowledge and access to nutrition and Sexual and Reproductive Health services, improve health and education outcomes, as well as to empower women and benefit deserving families through enhancement of their employment skills and provision of micro-credit facilities for income generation.', '2', '7/1/13', '', '6/30/16', '', '0', '0', '0', '354255', ';Department For International Development DFID', '', ';Rahnuma-Family Planning Assocation of Pakistan', ';Rahnuma-Family Planning Assocation of Pakistan', '', 'PK', '', '', '', '', '', 'DAC', '13020', '']
+        self.rowData = ['1706', 'Rahnuma-Family Planning Association of Pakistan', 'mis@fpapak.org', 'en', 'PKR', '2015-01-28 15:49:13', 'Rahnuma-Family Planning Assocation of Pakistan', 'PK-MSW-633-1965', '22', 'PK-MSW-633-1965-GPAF-IMP-059', 'Integrating Education Health and Income generation services for 14,000 school students, their mothers and families, in Pakistan.', '[4]Published', 'This is a synergistic project, connecting three ongoing initiatives related to Sexual and Reproductive Health education, services and improving livelihoods. Using the platform of schools, the project will reach out to adolescents, their mothers and families in ten districts of Pakistan, to increase knowledge and access to nutrition and Sexual and Reproductive Health services, improve health and education outcomes, as well as to empower women and benefit deserving families through enhancement of their employment skills and provision of micro-credit facilities for income generation.', '[1]General', '2', '2013-07-01', '', '2016-06-30', '', '0', '0', '0', '354255', ';Department For International Development DFID', '', ';Rahnuma-Family Planning Assocation of Pakistan', ';Rahnuma-Family Planning Assocation of Pakistan', '', 'PK', '', '', '', '', '', 'DAC', '13020', '', '']
 
     def testTitle(self):
         row = IatiActivityRow(self.rowData)
@@ -15,11 +15,12 @@ class IatiActivities1Test(unittest.TestCase):
     def testDescription(self):
         row = IatiActivityRow(self.rowData)
         self.assertEqual(self.rowData[IatiCSVRowConstants.DESCRIPTION], "This is a synergistic project, connecting three ongoing initiatives related to Sexual and Reproductive Health education, services and improving livelihoods. Using the platform of schools, the project will reach out to adolescents, their mothers and families in ten districts of Pakistan, to increase knowledge and access to nutrition and Sexual and Reproductive Health services, improve health and education outcomes, as well as to empower women and benefit deserving families through enhancement of their employment skills and provision of micro-credit facilities for income generation.")
+        self.assertEqual(self.rowData[IatiCSVRowConstants.DESCRIPTION_TYPE], "[1]General")
         self.assertEqual(row.checkDescription(), True)
         
     def testStartDate(self):
         row = IatiActivityRow(self.rowData)
-        self.assertEqual(self.rowData[IatiCSVRowConstants.START_PLANNED], "7/1/13")
+        self.assertEqual(self.rowData[IatiCSVRowConstants.START_PLANNED], "2013-07-01")
         self.assertEqual(self.rowData[IatiCSVRowConstants.START_ACTUAL], "")
         self.assertEqual(row.checkStartDate(), True)
 
@@ -47,13 +48,20 @@ class IatiActivities1Test(unittest.TestCase):
 
 class IatiActivities2Test(unittest.TestCase):
     def setUp(self):
-        self.rowData = ['1706', 'Rahnuma-Family Planning Association of Pakistan', 'mis@fpapak.org', 'en', 'PKR', '1/28/15 15:49', 'Rahnuma-Family Planning Assocation of Pakistan', 'PK-MSW-633-1965', '22', 'PK-MSW-633-1965-GPAF-IMP-059', '', 'This is a synergistic project, connecting three ongoing initiatives related to Sexual and Reproductive Health education, services and improving livelihoods. Using the platform of schools, the project will reach out to adolescents, their mothers and families in ten districts of Pakistan, to increase knowledge and access to nutrition and Sexual and Reproductive Health services, improve health and education outcomes, as well as to empower women and benefit deserving families through enhancement of their employment skills and provision of micro-credit facilities for income generation.', '2', '7/1/13', '', '6/30/16', '', '0', '0', '0', '354255', ';Department For International Development DFID', '', ';Rahnuma-Family Planning Assocation of Pakistan', ';Rahnuma-Family Planning Assocation of Pakistan', '', 'PK', '', '', '', '', '', 'DAC', '13020', '']
+        self.rowData = ['1706', 'Rahnuma-Family Planning Association of Pakistan', 'mis@fpapak.org', 'en', 'PKR', '2015-01-28 15:49:13', 'Rahnuma-Family Planning Assocation of Pakistan', 'PK-MSW-633-1965', '22', 'PK-MSW-633-1965-GPAF-IMP-059', '', '[4]Published', 'This is a synergistic project, connecting three ongoing initiatives related to Sexual and Reproductive Health education, services and improving livelihoods. Using the platform of schools, the project will reach out to adolescents, their mothers and families in ten districts of Pakistan, to increase knowledge and access to nutrition and Sexual and Reproductive Health services, improve health and education outcomes, as well as to empower women and benefit deserving families through enhancement of their employment skills and provision of micro-credit facilities for income generation.', '[1]General;[1]General', '2', '2013-07-01', '', '2016-06-30', '', '0', '0', '0', '354255', ';Department For International Development DFID', '', ';Rahnuma-Family Planning Assocation of Pakistan', ';Rahnuma-Family Planning Assocation of Pakistan', '', 'PK', '', '', '', '', '', 'DAC', '13020', '', '']
 
     def testTitle(self):
         row = IatiActivityRow(self.rowData)
         self.assertEqual(self.rowData[IatiCSVRowConstants.TITLE], "")
         self.assertEqual(row.checkTitle(), False)
         self.assertEqual(row.errors.errors[0], "Title missing")
+
+    def testDescription(self):
+        row = IatiActivityRow(self.rowData)
+        self.assertEqual(self.rowData[IatiCSVRowConstants.DESCRIPTION], "This is a synergistic project, connecting three ongoing initiatives related to Sexual and Reproductive Health education, services and improving livelihoods. Using the platform of schools, the project will reach out to adolescents, their mothers and families in ten districts of Pakistan, to increase knowledge and access to nutrition and Sexual and Reproductive Health services, improve health and education outcomes, as well as to empower women and benefit deserving families through enhancement of their employment skills and provision of micro-credit facilities for income generation.")
+        self.assertEqual(self.rowData[IatiCSVRowConstants.DESCRIPTION_TYPE], "[1]General;[1]General")
+        self.assertEqual(row.checkDescription(), False)
+
 
 if __name__ == "__main__":
     unittest.main()

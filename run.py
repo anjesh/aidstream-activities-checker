@@ -4,7 +4,7 @@ from IatiActivities import *
 outfile = open('data/iati-activites-with-errors.csv', 'w')
 csvwriter = csv.writer(outfile, delimiter=',',quotechar='"')
 
-infilename = "data/iati_activities-2015.02.16.csv"
+infilename = "data/iati_activities-2015.03.20.csv"
 with open(infilename, "rU") as infile:
     rowCount = 0
     errorRows = 0
