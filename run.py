@@ -1,10 +1,20 @@
 import csv
+import os
+import argparse
 from IatiActivities import *
 
-outfile = open('data/iati-activites-with-errors.csv', 'w')
+parser = argparse.ArgumentParser(description='Prepares the error report from iati aidstream activities')
+parser.add_argument('-i','--infile', help='File name of the input csv filepath.', required=True)
+parser.add_argument('-o','--outfile', help='File name of the output csv file. Prepares csv in "out" folder.', required=True)
+results = parser.parse_args()
+
+infilename = results.infile;
+outfilename = os.path.join("out", results.outfile);
+
+
+outfile = open(outfilename, 'w')
 csvwriter = csv.writer(outfile, delimiter=',',quotechar='"')
 
-infilename = "data/iati_activities-2015.03.20.csv"
 with open(infilename, "rU") as infile:
     rowCount = 0
     errorRows = 0
@@ -13,6 +23,7 @@ with open(infilename, "rU") as infile:
         if rowCount == 0:
             #header 
             rowCount += 1
+            row.extend(["Error", "Error Desc"])
             csvwriter.writerow(row)
             continue
         activityRow = IatiActivityRow(row)
@@ -20,9 +31,9 @@ with open(infilename, "rU") as infile:
         if activityRow.hasError():
             errorRows += 1
             errors = activityRow.getErrors()
-            row.append(errors)
+            row.extend([1, errors])
         else:
-            row.append("")
+            row.extend(["", ""])
         csvwriter.writerow(row)
         rowCount += 1
 
